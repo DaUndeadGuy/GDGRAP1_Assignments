@@ -16,10 +16,23 @@
     <Filter Include="Dependencies">
       <UniqueIdentifier>{d5488cae-fb19-4623-b4e6-f0c6b88b7648}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3D">
+      <UniqueIdentifier>{86688ef4-7f07-4359-9469-986e9da880d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="glad.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Shaders\sample.frag" />
+    <CopyFileToFolders Include="Shaders\sample.vert" />
   </ItemGroup>
 </Project>
