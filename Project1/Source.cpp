@@ -9,76 +9,9 @@
 
 #include "Models.h"
 
-//glm::vec3 translate = glm::vec3(0.0f, 0.0f, -5.0f);
-//glm::vec3 scale = glm::vec3(2.0f, 2.0f, 2.0f);
-//glm::vec3 rotateX = glm::vec3(1.0f, 0.0f, 0.0f);
-//glm::vec3 rotateY = glm::vec3(0.0f, 1.0f, 0.0f);
-
 
 void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mod)
 {
-    ////Movement
-    //if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    translate.x += 0.1f;
-    //}
-    //if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    translate.x -= 0.1f;
-    //}
-    //if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    translate.y += 0.1f;
-    //}
-    //if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    translate.y -= 0.1f;
-    //}
-
-    ////Rotate Y
-    //if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    thetaX -= 0.1f;
-    //}
-    //if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    thetaX += 0.1f;
-    //}
-
-    ////Rotate X
-    //if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    thetaY -= 0.1f;
-    //}
-    //if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    thetaY += 0.1f;
-    //}
-
-    ////Zoom
-    //if (key == GLFW_KEY_Z && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    FOV -= 1.0f;
-    //}
-    //if (key == GLFW_KEY_X && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    FOV += 1.0f;
-    //}
-
-    ////Scale
-    //if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    scale.x += 0.1f;
-    //    scale.y += 0.1f;
-    //    scale.z += 0.1f;
-    //}
-    //if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    //{
-    //    scale.x -= 0.1f;
-    //    scale.y -= 0.1f;
-    //    scale.z -= 0.1f;
-    //}
-
 
 }
 

@@ -1,8 +1,10 @@
-#version 330 core
+#version 330 core 
 
-out vec4 FragColor; //Color pixel
+uniform vec3 objectColor;
+out vec4 FragColor; //pixel color
 
-void main(){
-		//
-		FragColor = vec4(0.4f, 0f, 0f, 1f);
+void main()
+{
+    FragColor.rgb = objectColor;
+    FragColor.a = 1.0f;
 }
