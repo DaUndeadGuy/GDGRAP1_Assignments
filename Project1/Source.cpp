@@ -78,7 +78,7 @@ int main(void)
         glm::mat4 projection = glm::perspective(glm::radians(FOV), (height / width), 0.1f, 100.0f);
         glm::mat4 transform_matrix_front = glm::translate(identity_matrix, translate);
         transform_matrix_front = glm::scale(transform_matrix_front, scale);
-        transform_matrix_front = glm::rotate(transform_matrix_front, glm::radians(90.0f), rotateX);
+        transform_matrix_front = glm::rotate(transform_matrix_front, glm::radians(thetaX), rotateX);
         glm::mat4 view_front = glm::lookAt(cameraPos_front, cameraCenter_front, world_Up);
 
 
