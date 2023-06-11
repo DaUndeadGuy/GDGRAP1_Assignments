@@ -3,6 +3,8 @@
 
 #include "tiny_obj_loader.h"
 
+#include "stb_image.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -27,20 +29,23 @@ namespace Model
 		GLuint getShaderProgram();
 
 		void SetColor(const glm::vec3& color);
-		void DrawModel(glm::mat4 transform_matrix, glm::mat4 view_matrix, glm::mat4 projection_matrix);
+		void DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix);
 		void CleanUp();
 
 	private:
 		void LoadShaders(std::string sVertPath, std::string sFragPath);
 		void LoadModel(std::string sMeshPath);
 		void VertexInit();
+		void TexInit();
 
 	private:
-		GLuint VAO, VBO, EBO;
+		GLuint VAO, VBO, EBO, VBO_UV, texture;
 		tinyobj::attrib_t attributes;
 		std::vector<GLuint> mesh_indices;
 
 		GLuint shaderProgram;
+
+
 	};
 }
 

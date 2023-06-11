@@ -1,7 +1,20 @@
 #define TINYOBJLOADER_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 #include "Models.h"
 
 using namespace Model;
+
+
+GLfloat UV[]{
+0.f, 1.f,
+0.f, 0.f,
+1.f, 1.f,
+1.f, 0.f,
+1.f, 1.f,
+1.f, 0.f,
+0.f, 1.f,
+0.f, 0.f
+};
 
 Models::Models(std::string sMeshPath, std::string sVertPath, std::string sFragPath)
 {
@@ -62,6 +75,7 @@ void Models::LoadModel(std::string sMeshPath)
         this->mesh_indices.push_back(shapes[0].mesh.indices[i].vertex_index);
     }
 
+    this->TexInit();
     this->VertexInit();
 }
 
@@ -69,6 +83,7 @@ void Models::VertexInit()
 {
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &this->VBO);
+    glGenBuffers(1, &this->VBO_UV);
     glGenBuffers(1, &this->EBO);
 
     //tells OPENGL that we're working on this VAO
@@ -106,9 +121,67 @@ void Models::VertexInit()
         this->mesh_indices.data(),
         GL_STATIC_DRAW);
 
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_UV);
+    glBufferData(GL_ARRAY_BUFFER,
+        sizeof(GLfloat) * (sizeof(UV) / sizeof(UV[0])),
+        &UV[0],
+        GL_DYNAMIC_DRAW);
+
+    //Add in to interpret array
+    glVertexAttribPointer(
+        2, //2 for UV or TEX coords
+        2, //UV
+        GL_FLOAT, //Type of array
+        GL_FALSE,
+        2 * sizeof(float), //Every 2 index
+        (void*)0
+    );
+
+    glEnableVertexAttribArray(2); //Enable 2 for UV / Tex Coords
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+}
+
+void Models::TexInit()
+{
+    int img_width,
+        img_height,
+        colorChannels;
+
+    stbi_set_unpremultiply_on_load(true);
+
+    unsigned char* tex_bytes =
+        stbi_load("3D/ayaya.png",
+            &img_width,
+            &img_height,
+            &colorChannels,
+            0);
+
+    glGenTextures(1, &this->texture);
+
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindTexture(GL_TEXTURE_2D, this->texture);
+
+    glTexImage2D(GL_TEXTURE_2D,
+        0, //Texture 0
+        GL_RGBA, //Target color format of texture
+        img_width,
+        img_height,
+        0,
+        GL_RGBA, //Color format
+        GL_UNSIGNED_BYTE,
+        tex_bytes); //Load texture in bytes
+
+    glGenerateMipmap(GL_TEXTURE_2D); //Generate mipmaps
+
+    stbi_image_free(tex_bytes);
+
+
 }
 
 
@@ -118,16 +191,20 @@ void Models::SetColor(const glm::vec3& color)
     glUniform3fv(colorLoc, 1, glm::value_ptr(color));
 }
 
-void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 view_matrix, glm::mat4 projection_matrix)
+void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
 {
     unsigned int transformLoc = glGetUniformLocation(this->shaderProgram, "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform_matrix));
 
-    unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
+    //unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
+    //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
     unsigned int projectionLoc = glGetUniformLocation(this->shaderProgram, "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+
+    GLuint tex0Address = glGetUniformLocation(shaderProgram, "tex0");
+    glBindTexture(GL_TEXTURE_2D, this->texture);
+    glUniform1i(tex0Address, 0);
 
     glBindVertexArray(this->VAO);
 

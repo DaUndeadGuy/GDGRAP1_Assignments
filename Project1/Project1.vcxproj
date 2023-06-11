@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Documents\School Stuff\DLSU Stuff\GDGRAP1\Assignments_Project\GDGRAP1_Assignments\Project1\Dependencies\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Documents\School Stuff\DLSU Stuff\GDGRAP1\Assignments_Project\GDGRAP1_Assignments\Project1\Dependencies\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Dependencies\include\lib-vc2022;D:\Documents\School Stuff\DLSU Stuff\GDGRAP1\Assignments_Project\GDGRAP1_Assignments\Project1\Dependencies\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -138,7 +138,9 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dependencies\include\GLFW\glfw3.h" />
     <ClInclude Include="Models.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +158,9 @@
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)Shaders</DestinationFolders>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Dependencies\include\lib-vc2022\glfw3.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
