@@ -87,7 +87,7 @@ void Models::LoadModel(std::string sMeshPath)
 
         //Normals (XYZ)
 
-                //X
+        //X
         this->fullVertexData.push_back(
             this->attributes.normals[vData.normal_index * 3]
         );
@@ -148,19 +148,19 @@ void Models::VertexInit()
         GL_FLOAT, //array data type
         GL_FALSE,
         //XYZ UV
-        5 * sizeof(GL_FLOAT),
+        8 * sizeof(GL_FLOAT),
         (void*)0
     );
 
     //XYZ UV
     //012 3
-    GLintptr uvPtr = 3 * sizeof(float);
+    GLintptr uvPtr = 6 * sizeof(float);
     glVertexAttribPointer(
         2,
         2,
         GL_FLOAT,
         GL_FALSE,
-        5 * sizeof(GL_FLOAT),
+        8 * sizeof(GL_FLOAT),
         (void*)uvPtr
     );
 
@@ -259,7 +259,7 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
     glUniform1i(tex0Address, 0);
 
     glBindVertexArray(this->VAO);
-    glDrawArrays(GL_TRIANGLES, 0, this->fullVertexData.size() / 5);
+    glDrawArrays(GL_TRIANGLES, 0, this->fullVertexData.size() / 8);
 
     //glDrawElements(
     //    GL_TRIANGLES,
