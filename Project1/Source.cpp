@@ -118,7 +118,7 @@ int main(void)
     gladLoadGL();
 
 
-    Model::Models object("3D/MyCube.obj", "Shaders/sample.vert", "Shaders/sample.frag");
+    Model::Models object("3D/djSword.obj", "Shaders/sample.vert", "Shaders/sample.frag");
 
     glfwSetKeyCallback(window, Key_Callback);
 
