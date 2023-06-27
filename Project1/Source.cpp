@@ -72,15 +72,15 @@ void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mod
     //Scale
     if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        scale.x += 0.1f;
-        scale.y += 0.1f;
-        scale.z += 0.1f;
+        scale.x += 0.05f;
+        scale.y += 0.05f;
+        scale.z += 0.05f;
     }
     if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        scale.x -= 0.1f;
-        scale.y -= 0.1f;
-        scale.z -= 0.1f;
+        scale.x -= 0.05f;
+        scale.y -= 0.05f;
+        scale.z -= 0.05f;
     }
 }
 
@@ -94,8 +94,6 @@ int main(void)
     GLFWwindow* window;
     float width = 600.0f;
     float height = 600.0f;
-
-    glm::mat4 identity_matrix = glm::mat4(1.0f);
 
     //glm::mat4 projection = glm::ortho(-2.f, 2.f, -2.f, 2.f, -1.f, 1.f);
 
@@ -127,7 +125,8 @@ int main(void)
         (GLsizei)width,         //max x
         (GLsizei)height);       //max y
 
-    
+
+    glm::mat4 identity_matrix = glm::mat4(1.0f);
 
     glEnable(GL_DEPTH_TEST);
     /* Loop until the user closes the window */
@@ -135,7 +134,6 @@ int main(void)
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
         glm::mat4 projection = glm::perspective(glm::radians(FOV), (height / width), 0.1f, 100.0f);
         glm::mat4 transform_matrix = glm::translate(identity_matrix, translate);

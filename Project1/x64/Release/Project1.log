@@ -1,0 +1,9 @@
+﻿  glad.c
+  Models.cpp
+D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Models.cpp(262,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Source.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2154 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Project1.vcxproj -> D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\x64\Release\Project1.exe

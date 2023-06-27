@@ -152,6 +152,16 @@ void Models::VertexInit()
         (void*)0
     );
 
+    GLintptr normalPtr = 3 * sizeof(float);
+    glVertexAttribPointer(
+        1,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        8 * sizeof(GL_FLOAT),
+        (void*)normalPtr
+    );
+
     //XYZ UV
     //012 3
     GLintptr uvPtr = 6 * sizeof(float);
@@ -165,7 +175,6 @@ void Models::VertexInit()
     );
 
     //enable index 0
-    glEnableVertexAttribArray(0);
 
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER,
@@ -188,7 +197,8 @@ void Models::VertexInit()
     //    2 * sizeof(float), //Every 2 index
     //    (void*)0
     //);
-
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2); //Enable 2 for UV / Tex Coords
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -245,6 +255,16 @@ void Models::SetColor(const glm::vec3& color)
 
 void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
 {
+    glm::vec3 lightPos = glm::vec3(-10, 3, 0);
+    glm::vec3 lightColor = glm::vec3(1, 1, 1);
+
+    float ambientStr = 0.5f;
+    glm::vec3 ambientColor = lightColor;
+
+    float specStr = 0.5f;
+    float specPhong = 16;
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.f);
+
     unsigned int transformLoc = glGetUniformLocation(this->shaderProgram, "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform_matrix));
 
@@ -256,6 +276,28 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
 
     GLuint tex0Address = glGetUniformLocation(shaderProgram, "tex0");
     glBindTexture(GL_TEXTURE_2D, this->texture);
+
+    GLuint lightAddress = glGetUniformLocation(shaderProgram, "lightPos");
+    glUniform3fv(lightAddress, 1, glm::value_ptr(lightPos));
+    
+    GLuint lightColorAddress = glGetUniformLocation(shaderProgram, "lightColor");
+    glUniform3fv(lightColorAddress, 1, glm::value_ptr(lightColor));
+
+    GLuint ambientStrAddress = glGetUniformLocation(shaderProgram, "ambientStr");
+    glUniform1f(ambientStrAddress, ambientStr);
+
+    GLuint ambientColorAddress = glGetUniformLocation(shaderProgram, "ambientColor");
+    glUniform3fv(ambientColorAddress, 1, glm::value_ptr(ambientColor));
+
+    GLuint cameraPosAddress = glGetUniformLocation(shaderProgram, "cameraPos");
+    glUniform3fv(cameraPosAddress, 1, glm::value_ptr(cameraPos));
+
+    GLuint specStrAddress = glGetUniformLocation(shaderProgram, "specStr");
+    glUniform1f(specStrAddress, specStr);
+
+    GLuint specPhongAddress = glGetUniformLocation(shaderProgram, "specPhong");
+    glUniform1f(specPhongAddress, specPhong);
+
     glUniform1i(tex0Address, 0);
 
     glBindVertexArray(this->VAO);
