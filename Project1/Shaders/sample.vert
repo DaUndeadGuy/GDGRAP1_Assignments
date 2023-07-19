@@ -16,7 +16,7 @@ out vec3 fragPos; //Pass the position of the vertex to the fragment shader later
 
 void main()
 {
-    gl_Position = projection * transform * vec4(aPos, 1.0);
+    gl_Position = projection * view * transform * vec4(aPos, 1.0);
 
     normCoord = mat3(//Get the Normal Matrix and convert it to a 3x3 matrix
                         transpose(inverse(transform))

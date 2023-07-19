@@ -24,22 +24,24 @@ namespace Model
 	class Models
 	{
 	public:
-		Models(std::string sMeshPath, std::string sVertPath, std::string sFragPath);
+		Models(std::string sMeshPath, std::string sVertPath, std::string sFragPath, std::string skyVertPath, std::string skyFragPath);
 
 		GLuint getShaderProgram();
 
 		void SetColor(const glm::vec3& color);
-		void DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix);
+		void DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 cameraPos);
 		void CleanUp();
 
 	private:
 		void LoadShaders(std::string sVertPath, std::string sFragPath);
+		void LoadSkyboxShaders(std::string skyVertPath, std::string skyFragPath);
 		void LoadModel(std::string sMeshPath);
 		void VertexInit();
 		void TexInit();
 
 	private:
 		GLuint VAO, VBO, EBO, VBO_UV, texture;
+		unsigned int skyboxVAO, skyboxVBO, skyboxEBO, skyboxTex;
 		tinyobj::attrib_t attributes;
 		std::vector<GLuint> mesh_indices;
 		std::vector<GLfloat> fullVertexData;
@@ -48,6 +50,7 @@ namespace Model
 
 
 		GLuint shaderProgram;
+		GLuint skyboxProgram;
 
 
 	};

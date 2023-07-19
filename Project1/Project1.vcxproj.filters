@@ -46,6 +46,8 @@
   <ItemGroup>
     <CopyFileToFolders Include="Shaders\sample.frag" />
     <CopyFileToFolders Include="Shaders\sample.vert" />
+    <CopyFileToFolders Include="Shaders\skybox.frag" />
+    <CopyFileToFolders Include="Shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Dependencies\include\lib-vc2022\glfw3.lib" />
