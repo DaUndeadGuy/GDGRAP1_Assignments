@@ -47,12 +47,11 @@ void Models::LoadShaders(std::string sVertPath, std::string sFragPath)
 void Models::LoadModel(std::string sMeshPath)
 {
     std::string path = sMeshPath;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> material;
+    std::string path2 = "3D/djSword_o.obj";
+    std::vector<tinyobj::shape_t> shapes, shapes2;
+    std::vector<tinyobj::material_t> material, material2;
     std::string warning, error;
-
-    tinyobj::index_t vData;
-
+    char *paths = realpath
     bool success = tinyobj::LoadObj(
         &this->attributes,
         &shapes,
@@ -61,29 +60,60 @@ void Models::LoadModel(std::string sMeshPath)
         &error,
         path.c_str());
 
+    bool success2 = tinyobj::LoadObj(
+        &this->attributes,
+        &shapes2,
+        &material2,
+        &warning,
+        &error,
+        path2.c_str());
+
+
+
     for (size_t i = 0; i < shapes[0].mesh.indices.size(); i++)
     {
         this->mesh_indices.push_back(shapes[0].mesh.indices[i].vertex_index);
+        this->mesh_indices.push_back(shapes2[0].mesh.indices[i].vertex_index);
+
     }
 
     for (size_t i = 0; i < shapes[0].mesh.indices.size(); i++)
     {
         vData = shapes[0].mesh.indices[i];
+        vData2 = shapes2[0].mesh.indices[i];
+        float x = this->attributes.vertices[vData.vertex_index * 3];
+        float y = this->attributes.vertices[vData.vertex_index * 3 + 1];
+        float z = this->attributes.vertices[vData.vertex_index * 3 + 2];
 
         //X
         this->fullVertexData.push_back(
             this->attributes.vertices[vData.vertex_index * 3]
         );
 
-        //Y
+        ////Y
         this->fullVertexData.push_back(
             this->attributes.vertices[vData.vertex_index * 3 + 1]
         );
 
-        //Z
+        ////Z
         this->fullVertexData.push_back(
             this->attributes.vertices[vData.vertex_index * 3 + 2]
         );
+
+    	////X
+     //   this->fullVertexData.push_back(
+     //       this->attributes.colors[vData.vertex_index * 3]
+     //   );
+
+     //   ////Y
+     //   this->fullVertexData.push_back(
+     //       this->attributes.colors[vData.vertex_index * 3 + 1]
+     //   );
+
+     //   ////Z
+     //   this->fullVertexData.push_back(
+     //       this->attributes.colors[vData.vertex_index * 3 + 2]
+     //   );
 
         //Normals (XYZ)
 
@@ -102,16 +132,23 @@ void Models::LoadModel(std::string sMeshPath)
             this->attributes.normals[vData.normal_index * 3 + 2]
         );
 
+        /*Texcoords - There's two implementations included. One is planar mapping and one is
+			loading the texcoords from a different model and using it into the file*/
 
-        //U
+        //U - UV from djSword_o.obj
+
         this->fullVertexData.push_back(
-            this->attributes.texcoords[vData.texcoord_index * 2]
+            this->attributes.texcoords[vData2.texcoord_index * 2]
         );
 
         //V
+
         this->fullVertexData.push_back(
-            this->attributes.texcoords[vData.texcoord_index * 2 + 1]
+            this->attributes.texcoords[vData2.texcoord_index * 2 + 1]
         );
+
+        //this->fullVertexData.push_back(x * 0.5f); // U Planar Mapping
+        //this->fullVertexData.push_back(y * 0.1f); // V
     }
 
     this->TexInit();
@@ -256,7 +293,7 @@ void Models::SetColor(const glm::vec3& color)
 void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
 {
     glm::vec3 lightPos = glm::vec3(-10, 3, 0);
-    glm::vec3 lightColor = glm::vec3(1, 1, 1);
+    glm::vec3 lightColor = glm::vec3(0, 1, 0);
 
     float ambientStr = 0.5f;
     glm::vec3 ambientColor = lightColor;

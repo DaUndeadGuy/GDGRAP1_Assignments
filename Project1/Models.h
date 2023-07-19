@@ -44,6 +44,8 @@ namespace Model
 		std::vector<GLuint> mesh_indices;
 		std::vector<GLfloat> fullVertexData;
 		tinyobj::index_t vData;
+		tinyobj::index_t vData2;
+
 
 		GLuint shaderProgram;
 

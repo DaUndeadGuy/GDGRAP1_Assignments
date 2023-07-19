@@ -27,7 +27,7 @@ uniform float specPhong;
 
 void main(){
 		vec3 normal = normalize(normCoord);  //Normalize the received normals
-		vec3 lightDir = normalize(lightPos - fragPos);
+		vec3 lightDir = normalize(vec3(-1.0, -1.0, 0.0));
 
 		vec3 ambientCol = ambientColor * ambientStr;
 

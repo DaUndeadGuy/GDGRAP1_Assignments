@@ -110,7 +110,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Dependencies\include\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Dependencies\include\lib-vc2022;D:\Documents\OneDrive - De La Salle University - Manila\School Stuff\DLSU Stuff\GDGRAP1\Assignments_Project\GDGRAP1_Assignments\Project1\Dependencies\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -129,7 +129,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Dependencies\include\lib-vc2022;D:\Documents\School Stuff\DLSU Stuff\GDGRAP1\Assignments_Project\GDGRAP1_Assignments\Project1\Dependencies\lib-vc2022;%(AdditionalLibraryDirectories);D:\Documents\OneDrive - De La Salle University - Manila\School Stuff\DLSU Stuff\GDGRAP1\Assignments_Project\GDGRAP1_Assignments\Project1\Dependencies\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Dependencies\include\lib-vc2022;D:\Documents\OneDrive - De La Salle University - Manila\School Stuff\DLSU Stuff\GDGRAP1\Assignments_Project\GDGRAP1_Assignments\Project1\Dependencies\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

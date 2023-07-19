@@ -9,12 +9,12 @@
 
 #include "Models.h"
 
-float thetaX = 90.0f;
+float thetaX = 0.0f;
 float thetaY = 0.0f;
-float FOV = 60.0f;
+float FOV = 90.0f;
 
-glm::vec3 translate = glm::vec3(0.0f, 0.0f, -5.0f);
-glm::vec3 scale = glm::vec3(2.0f, 2.0f, 2.0f);
+glm::vec3 translate = glm::vec3(0.0f, 0.0f, -50.0f);
+glm::vec3 scale = glm::vec3(.5f, .5f, .5f);
 glm::vec3 rotateX = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 rotateY = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -143,7 +143,7 @@ int main(void)
 
         //object.SetColor(glm::vec3(0.4f, 0.f, 0.f));
         object.DrawModel(transform_matrix, projection);
-
+        thetaY += 0.01f;
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
