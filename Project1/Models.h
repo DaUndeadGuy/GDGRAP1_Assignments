@@ -29,7 +29,7 @@ namespace Model
 		GLuint getShaderProgram();
 
 		void SetColor(const glm::vec3& color);
-		void DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix);
+		void DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 cameraPos);
 		void CleanUp();
 
 	private:
@@ -39,7 +39,7 @@ namespace Model
 		void TexInit();
 
 	private:
-		GLuint VAO, VBO, EBO, VBO_UV, texture;
+		GLuint VAO, VBO, EBO, VBO_UV, texture, norm_tex;
 		tinyobj::attrib_t attributes;
 		std::vector<GLuint> mesh_indices;
 		std::vector<GLfloat> fullVertexData;

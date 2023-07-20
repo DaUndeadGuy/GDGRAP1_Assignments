@@ -50,6 +50,7 @@ void Models::LoadModel(std::string sMeshPath)
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> material;
     std::string warning, error;
+    std::vector<glm::vec3> tangents, bitangents;
 
     tinyobj::index_t vData;
 
@@ -60,6 +61,66 @@ void Models::LoadModel(std::string sMeshPath)
         &warning,
         &error,
         path.c_str());
+
+    for (int i = 0; i < shapes[0].mesh.indices.size(); i += 3)
+    {
+        tinyobj::index_t vData1 = shapes[0].mesh.indices[i];
+        tinyobj::index_t vData2 = shapes[0].mesh.indices[i + 1];
+        tinyobj::index_t vData3 = shapes[0].mesh.indices[i + 2];
+
+        glm::vec3 v1 = glm::vec3(
+            this->attributes.vertices[vData1.vertex_index * 3],
+            this->attributes.vertices[vData1.vertex_index * 3 + 1],
+            this->attributes.vertices[vData1.vertex_index * 3 + 2] 
+        );
+
+        glm::vec3 v2 = glm::vec3(
+            this->attributes.vertices[vData2.vertex_index * 3],
+            this->attributes.vertices[vData2.vertex_index * 3 + 1],
+            this->attributes.vertices[vData2.vertex_index * 3 + 2]
+        );
+
+        glm::vec3 v3 = glm::vec3(
+            this->attributes.vertices[vData3.vertex_index * 3],
+            this->attributes.vertices[vData3.vertex_index * 3 + 1],
+            this->attributes.vertices[vData3.vertex_index * 3 + 2]
+        );
+
+        glm::vec2 uv1 = glm::vec2(
+            this->attributes.vertices[vData1.texcoord_index * 2],
+            this->attributes.vertices[vData1.texcoord_index * 2 + 1]
+        );
+
+        glm::vec2 uv2 = glm::vec2(
+            this->attributes.vertices[vData2.texcoord_index * 2],
+            this->attributes.vertices[vData2.texcoord_index * 2 + 1]
+        );
+
+        glm::vec2 uv3 = glm::vec2(
+            this->attributes.vertices[vData3.texcoord_index * 2],
+            this->attributes.vertices[vData3.texcoord_index * 2 + 1]
+        );
+
+        glm::vec3 deltaPos1 = v2 - v1;
+        glm::vec3 deltaPos2 = v3 - v1;
+
+        glm::vec2 deltaUV1 = uv2 - uv1;
+        glm::vec2 deltaUV2 = uv3 - uv1;
+
+        float r = 1.0f / ((deltaUV1.x * deltaUV2.y) - (deltaUV1.y * deltaUV2.x));
+
+        glm::vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+        glm::vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
+
+        tangents.push_back(tangent);
+        tangents.push_back(tangent);
+        tangents.push_back(tangent);
+
+        bitangents.push_back(bitangent);
+        bitangents.push_back(bitangent);
+        bitangents.push_back(bitangent);
+
+    }
 
     for (size_t i = 0; i < shapes[0].mesh.indices.size(); i++)
     {
@@ -112,6 +173,19 @@ void Models::LoadModel(std::string sMeshPath)
         this->fullVertexData.push_back(
             this->attributes.texcoords[vData.texcoord_index * 2 + 1]
         );
+
+        this->fullVertexData.push_back(tangents[i].x);
+
+        this->fullVertexData.push_back(tangents[i].y);
+
+        this->fullVertexData.push_back(tangents[i].z);
+
+        this->fullVertexData.push_back(bitangents[i].x);
+
+        this->fullVertexData.push_back(bitangents[i].y);
+
+        this->fullVertexData.push_back(bitangents[i].z);
+
     }
 
     this->TexInit();
@@ -148,7 +222,7 @@ void Models::VertexInit()
         GL_FLOAT, //array data type
         GL_FALSE,
         //XYZ UV
-        8 * sizeof(GL_FLOAT),
+        14 * sizeof(GL_FLOAT),
         (void*)0
     );
 
@@ -158,7 +232,7 @@ void Models::VertexInit()
         3,
         GL_FLOAT,
         GL_FALSE,
-        8 * sizeof(GL_FLOAT),
+        14 * sizeof(GL_FLOAT),
         (void*)normalPtr
     );
 
@@ -170,9 +244,31 @@ void Models::VertexInit()
         2,
         GL_FLOAT,
         GL_FALSE,
-        8 * sizeof(GL_FLOAT),
+        14 * sizeof(GL_FLOAT),
         (void*)uvPtr
     );
+
+    GLintptr tangentPtr = 8 * sizeof(float);
+    GLintptr bitangentPtr = 11 * sizeof(float);
+
+    glVertexAttribPointer(
+        3,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        14 * sizeof(float),
+        (void*)tangentPtr
+    );
+
+    glVertexAttribPointer(
+        4,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        14 * sizeof(float),
+        (void*)bitangentPtr
+    );
+
 
     //enable index 0
 
@@ -200,6 +296,8 @@ void Models::VertexInit()
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2); //Enable 2 for UV / Tex Coords
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -217,7 +315,7 @@ void Models::TexInit()
     stbi_set_unpremultiply_on_load(true);
 
     unsigned char* tex_bytes =
-        stbi_load("3D/ayaya.png",
+        stbi_load("3D/brickwall.jpg",
             &img_width,
             &img_height,
             &colorChannels,
@@ -226,16 +324,15 @@ void Models::TexInit()
     glGenTextures(1, &this->texture);
 
     glActiveTexture(GL_TEXTURE0);
-
     glBindTexture(GL_TEXTURE_2D, this->texture);
 
     glTexImage2D(GL_TEXTURE_2D,
         0, //Texture 0
-        GL_RGBA, //Target color format of texture
+        GL_RGB, //Target color format of texture
         img_width,
         img_height,
         0,
-        GL_RGBA, //Color format
+        GL_RGB, //Color format
         GL_UNSIGNED_BYTE,
         tex_bytes); //Load texture in bytes
 
@@ -243,7 +340,38 @@ void Models::TexInit()
 
     stbi_image_free(tex_bytes);
 
+    int img_width2, img_height2, colorChannel2;
+    stbi_set_flip_vertically_on_load(true);
 
+    unsigned char* normal_bytes =
+        stbi_load("3D/brickwall_normal.jpg",
+            &img_width2,
+            &img_height2,
+            &colorChannel2,
+            0);
+
+    glGenTextures(1, &this->norm_tex);
+
+    glActiveTexture(GL_TEXTURE1);
+
+    glBindTexture(GL_TEXTURE_2D, this->norm_tex);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+    glTexImage2D(GL_TEXTURE_2D,
+        0, //Texture 0
+        GL_RGB, //Target color format of texture
+        img_width2,
+        img_height2,
+        0,
+        GL_RGB, //Color format
+        GL_UNSIGNED_BYTE,
+        normal_bytes); //Load texture in bytes
+
+    glGenerateMipmap(GL_TEXTURE_2D); //Generate mipmaps
+
+    stbi_image_free(normal_bytes);
 }
 
 
@@ -253,9 +381,9 @@ void Models::SetColor(const glm::vec3& color)
     glUniform3fv(colorLoc, 1, glm::value_ptr(color));
 }
 
-void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
+void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 cameraPos)
 {
-    glm::vec3 lightPos = glm::vec3(-10, 3, 0);
+    glm::vec3 lightPos = glm::vec3(0, 3, 5);
     glm::vec3 lightColor = glm::vec3(1, 1, 1);
 
     float ambientStr = 0.5f;
@@ -263,42 +391,47 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
 
     float specStr = 0.5f;
     float specPhong = 16;
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.f);
 
     unsigned int transformLoc = glGetUniformLocation(this->shaderProgram, "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform_matrix));
 
-    //unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
-    //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
+    unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
     unsigned int projectionLoc = glGetUniformLocation(this->shaderProgram, "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
-    GLuint tex0Address = glGetUniformLocation(shaderProgram, "tex0");
+    glActiveTexture(GL_TEXTURE0);
+    GLuint tex0Address = glGetUniformLocation(this->shaderProgram, "tex0");
     glBindTexture(GL_TEXTURE_2D, this->texture);
 
-    GLuint lightAddress = glGetUniformLocation(shaderProgram, "lightPos");
+    glActiveTexture(GL_TEXTURE1);
+    GLuint tex1Loc = glGetUniformLocation(this->shaderProgram, "norm_tex");
+    glBindTexture(GL_TEXTURE_2D, this->norm_tex);
+
+    GLuint lightAddress = glGetUniformLocation(this->shaderProgram, "lightPos");
     glUniform3fv(lightAddress, 1, glm::value_ptr(lightPos));
     
-    GLuint lightColorAddress = glGetUniformLocation(shaderProgram, "lightColor");
+    GLuint lightColorAddress = glGetUniformLocation(this->shaderProgram, "lightColor");
     glUniform3fv(lightColorAddress, 1, glm::value_ptr(lightColor));
 
-    GLuint ambientStrAddress = glGetUniformLocation(shaderProgram, "ambientStr");
+    GLuint ambientStrAddress = glGetUniformLocation(this->shaderProgram, "ambientStr");
     glUniform1f(ambientStrAddress, ambientStr);
 
-    GLuint ambientColorAddress = glGetUniformLocation(shaderProgram, "ambientColor");
+    GLuint ambientColorAddress = glGetUniformLocation(this->shaderProgram, "ambientColor");
     glUniform3fv(ambientColorAddress, 1, glm::value_ptr(ambientColor));
 
-    GLuint cameraPosAddress = glGetUniformLocation(shaderProgram, "cameraPos");
+    GLuint cameraPosAddress = glGetUniformLocation(this->shaderProgram, "cameraPos");
     glUniform3fv(cameraPosAddress, 1, glm::value_ptr(cameraPos));
 
-    GLuint specStrAddress = glGetUniformLocation(shaderProgram, "specStr");
+    GLuint specStrAddress = glGetUniformLocation(this->shaderProgram, "specStr");
     glUniform1f(specStrAddress, specStr);
 
-    GLuint specPhongAddress = glGetUniformLocation(shaderProgram, "specPhong");
+    GLuint specPhongAddress = glGetUniformLocation(this->shaderProgram, "specPhong");
     glUniform1f(specPhongAddress, specPhong);
 
     glUniform1i(tex0Address, 0);
+    glUniform1i(tex1Loc, 1);
 
     glBindVertexArray(this->VAO);
     glDrawArrays(GL_TRIANGLES, 0, this->fullVertexData.size() / 8);

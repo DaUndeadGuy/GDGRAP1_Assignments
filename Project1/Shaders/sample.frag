@@ -5,6 +5,9 @@ uniform vec3 objectColor;
 out vec4 FragColor; //pixel color
 
 uniform sampler2D tex0;
+uniform sampler2D norm_tex;
+
+in mat3 TBN;
 
 in vec2 texCoord;
 
@@ -13,7 +16,6 @@ in vec3 normCoord;
 
 //Vertex position in World space
 in vec3 fragPos;
-
 
 uniform vec3 lightPos; //Lightning position
 uniform vec3 lightColor; //Color position
@@ -25,8 +27,20 @@ uniform vec3 cameraPos;
 uniform float specStr;
 uniform float specPhong;
 
+
 void main(){
-		vec3 normal = normalize(normCoord);  //Normalize the received normals
+		vec4 pixelColor = texture(tex0, texCoord);
+
+		if (pixelColor.a <  0.1)
+		{
+			discard;
+		}
+
+		//vec3 normal = normalize(normCoord);  //Normalize the received normals
+		vec3 normal = texture(norm_tex, texCoord).rgb;
+		normal = normalize(normal * 2.0 - 1.0);
+		normal = normalize(TBN * normal);
+
 		vec3 lightDir = normalize(lightPos - fragPos);
 
 		vec3 ambientCol = ambientColor * ambientStr;
