@@ -9,6 +9,8 @@
 
 #include "Models.h"
 
+#include "Skybox.h"
+
 float thetaX = 90.0f;
 float thetaY = 0.0f;
 float FOV = 60.0f;
@@ -117,6 +119,7 @@ int main(void)
 
 
     Model::Models object("3D/djSword.obj", "Shaders/sample.vert", "Shaders/sample.frag");
+    //Sky::Skybox sky("Shaders/skybox.vert", "Shaders/skybox.frag");
 
     glfwSetKeyCallback(window, Key_Callback);
 
@@ -141,8 +144,37 @@ int main(void)
         transform_matrix = glm::rotate(transform_matrix, thetaX, rotateX);
         transform_matrix = glm::rotate(transform_matrix, thetaY, rotateY);
 
+        glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.f);
+        glm::mat4 cameraPosMatrix = glm::translate(glm::mat4(1.0f), cameraPos * -1.f);
+
+        glm::vec3 worldUp = glm::normalize(glm::vec3(0, 1.f, 0));
+        glm::vec3 cameraCenter = glm::vec3(0, 0.0f, 0);
+
+        glm::vec3 F = cameraCenter - cameraPos;
+        F = glm::normalize(F);
+
+        glm::vec3 R = glm::cross(F, worldUp);
+        glm::vec3 U = glm::cross(R, F);
+
+        glm::mat4 cameraOrientation = glm::mat4(1.f);
+
+        cameraOrientation[0][0] = R.x;
+        cameraOrientation[1][0] = R.y;
+        cameraOrientation[2][0] = R.z;
+
+        cameraOrientation[0][1] = U.x;
+        cameraOrientation[1][1] = U.y;
+        cameraOrientation[2][1] = U.z;
+
+        cameraOrientation[0][2] = -F.x;
+        cameraOrientation[1][2] = -F.y;
+        cameraOrientation[2][2] = -F.z;
+
+        glm::mat4 viewMatrix = glm::lookAt(cameraPos, cameraCenter, worldUp);
+
         //object.SetColor(glm::vec3(0.4f, 0.f, 0.f));
-        object.DrawModel(transform_matrix, projection);
+        //sky.DrawSkybox(viewMatrix, projection);
+        object.DrawModel(transform_matrix, projection, viewMatrix, cameraPos);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

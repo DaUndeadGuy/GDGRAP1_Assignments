@@ -118,6 +118,7 @@ void Models::LoadModel(std::string sMeshPath)
     this->VertexInit();
 }
 
+
 void Models::VertexInit()
 {
     glGenVertexArrays(1, &this->VAO);
@@ -197,7 +198,6 @@ void Models::VertexInit()
     //    2 * sizeof(float), //Every 2 index
     //    (void*)0
     //);
-    glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2); //Enable 2 for UV / Tex Coords
 
@@ -225,7 +225,7 @@ void Models::TexInit()
 
     glGenTextures(1, &this->texture);
 
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);   
 
     glBindTexture(GL_TEXTURE_2D, this->texture);
 
@@ -243,7 +243,6 @@ void Models::TexInit()
 
     stbi_image_free(tex_bytes);
 
-
 }
 
 
@@ -253,7 +252,7 @@ void Models::SetColor(const glm::vec3& color)
     glUniform3fv(colorLoc, 1, glm::value_ptr(color));
 }
 
-void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
+void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 cameraPos)
 {
     glm::vec3 lightPos = glm::vec3(-10, 3, 0);
     glm::vec3 lightColor = glm::vec3(1, 1, 1);
@@ -263,13 +262,12 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix)
 
     float specStr = 0.5f;
     float specPhong = 16;
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.f);
 
     unsigned int transformLoc = glGetUniformLocation(this->shaderProgram, "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform_matrix));
 
-    //unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
-    //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
+    unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
     unsigned int projectionLoc = glGetUniformLocation(this->shaderProgram, "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));

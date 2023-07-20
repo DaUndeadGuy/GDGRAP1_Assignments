@@ -1,1 +1,3 @@
-﻿  Project1.vcxproj -> D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\x64\Debug\Project1.exe
+﻿  Models.cpp
+D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\Project1\Models.cpp(303,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Project1.vcxproj -> D:\More random stuff\DLSU Stuff\College Stuff Now\GDGRAP1\GDGRAP1_Assignments\x64\Debug\Project1.exe

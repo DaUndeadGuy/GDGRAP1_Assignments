@@ -28,6 +28,9 @@
     <ClCompile Include="Models.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tiny_obj_loader.h">
@@ -42,12 +45,19 @@
     <ClInclude Include="Dependencies\include\GLFW\glfw3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Shaders\sample.frag" />
     <CopyFileToFolders Include="Shaders\sample.vert" />
+    <CopyFileToFolders Include="Shaders\skybox.frag" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Dependencies\include\lib-vc2022\glfw3.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\skybox.vert" />
   </ItemGroup>
 </Project>
