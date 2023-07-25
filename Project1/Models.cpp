@@ -381,7 +381,7 @@ void Models::SetColor(const glm::vec3& color)
     glUniform3fv(colorLoc, 1, glm::value_ptr(color));
 }
 
-void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 cameraPos)
+void Models::DrawModel(glm::mat4 transform_matrix)
 {
     glm::vec3 lightPos = glm::vec3(0, 3, 5);
     glm::vec3 lightColor = glm::vec3(1, 1, 1);
@@ -392,14 +392,16 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, 
     float specStr = 0.5f;
     float specPhong = 16;
 
+
+
     unsigned int transformLoc = glGetUniformLocation(this->shaderProgram, "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform_matrix));
 
-    unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
+    //unsigned int viewLoc = glGetUniformLocation(this->shaderProgram, "view");
+    //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
-    unsigned int projectionLoc = glGetUniformLocation(this->shaderProgram, "projection");
-    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+    //unsigned int projectionLoc = glGetUniformLocation(this->shaderProgram, "projection");
+    //glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
     glActiveTexture(GL_TEXTURE0);
     GLuint tex0Address = glGetUniformLocation(this->shaderProgram, "tex0");
@@ -421,8 +423,8 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, 
     GLuint ambientColorAddress = glGetUniformLocation(this->shaderProgram, "ambientColor");
     glUniform3fv(ambientColorAddress, 1, glm::value_ptr(ambientColor));
 
-    GLuint cameraPosAddress = glGetUniformLocation(this->shaderProgram, "cameraPos");
-    glUniform3fv(cameraPosAddress, 1, glm::value_ptr(cameraPos));
+    //GLuint cameraPosAddress = glGetUniformLocation(this->shaderProgram, "cameraPos");
+    //glUniform3fv(cameraPosAddress, 1, glm::value_ptr(cameraPos));
 
     GLuint specStrAddress = glGetUniformLocation(this->shaderProgram, "specStr");
     glUniform1f(specStrAddress, specStr);
@@ -433,8 +435,6 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, 
     glUniform1i(tex0Address, 0);
     glUniform1i(tex1Loc, 1);
 
-    glBindVertexArray(this->VAO);
-    glDrawArrays(GL_TRIANGLES, 0, this->fullVertexData.size() / 8);
 
     //glDrawElements(
     //    GL_TRIANGLES,
@@ -442,6 +442,12 @@ void Models::DrawModel(glm::mat4 transform_matrix, glm::mat4 projection_matrix, 
     //    GL_UNSIGNED_INT,
     //    0
     //);
+}
+
+void Models::DrawFunction()
+{
+    glBindVertexArray(this->VAO);
+    glDrawArrays(GL_TRIANGLES, 0, this->fullVertexData.size() / 8);
 }
 
 void Models::CleanUp()

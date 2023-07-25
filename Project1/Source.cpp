@@ -7,6 +7,7 @@
 
 #include <cmath>
 
+#include "CameraClass.h"
 #include "Models.h"
 
 float thetaX = 90.0f;
@@ -17,6 +18,13 @@ glm::vec3 translate = glm::vec3(0.0f, 0.0f, -5.0f);
 glm::vec3 scale = glm::vec3(2.0f, 2.0f, 2.0f);
 glm::vec3 rotateX = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 rotateY = glm::vec3(0.0f, 1.0f, 0.0f);
+
+float yaw = -90.0f;
+float pitch = 0.0f;
+bool firstMouse = true;
+
+bool persEnabled = false;
+bool othroEnabled = false;
 
 
 void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mod)
@@ -82,7 +90,21 @@ void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mod
         scale.y -= 0.05f;
         scale.z -= 0.05f;
     }
+
+    if (key == GLFW_KEY_1 && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        persEnabled = true;
+        othroEnabled = false;
+    }
+    if (key == GLFW_KEY_2 && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        othroEnabled = true;
+        persEnabled = false;
+    }
+
 }
+
+
 
 void Mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 {
@@ -127,6 +149,9 @@ int main(void)
 
 
     glm::mat4 identity_matrix = glm::mat4(1.0f);
+    Camera::baseCamera camera{};
+    Camera::orthoCamera othroCam{};
+    Camera::persCamera persCam{};
 
     glEnable(GL_DEPTH_TEST);
     /* Loop until the user closes the window */
@@ -140,42 +165,34 @@ int main(void)
         glBlendFunc(GL_SRC_ALPHA,
             GL_ONE_MINUS_SRC_ALPHA);
 
-        glm::mat4 projection = glm::perspective(glm::radians(FOV), (height / width), 0.1f, 100.0f);
         glm::mat4 transform_matrix = glm::translate(identity_matrix, translate);
         transform_matrix = glm::scale(transform_matrix, scale);
         transform_matrix = glm::rotate(transform_matrix, thetaX, rotateX);
         transform_matrix = glm::rotate(transform_matrix, thetaY, rotateY);
 
-        glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.f);
-        glm::mat4 cameraPosMatrix = glm::translate(glm::mat4(1.0f), cameraPos * -1.f);
 
-        glm::vec3 worldUp = glm::normalize(glm::vec3(0, 1.f, 0));
-        glm::vec3 cameraCenter = glm::vec3(0, 0.0f, 0);
 
-        glm::vec3 F = cameraCenter - cameraPos;
-        F = glm::normalize(F);
+        camera.InitializeViewMatrix(object.getShaderProgram());
+        camera.InitCameraPos(camera.GetCameraPos());
+        persCam.InitPersCam(height, width);
 
-        glm::vec3 R = glm::cross(F, worldUp);
-        glm::vec3 U = glm::cross(R, F);
+        othroCam.InitOrthoCam();
 
-        glm::mat4 cameraOrientation = glm::mat4(1.f);
+        camera.AssignView(object.getShaderProgram());
 
-        cameraOrientation[0][0] = R.x;
-        cameraOrientation[1][0] = R.y;
-        cameraOrientation[2][0] = R.z;
-
-        cameraOrientation[0][1] = U.x;
-        cameraOrientation[1][1] = U.y;
-        cameraOrientation[2][1] = U.z;
-
-        cameraOrientation[0][2] = -F.x;
-        cameraOrientation[1][2] = -F.y;
-        cameraOrientation[2][2] = -F.z;
-
-        glm::mat4 viewMatrix = glm::lookAt(cameraPos, cameraCenter, worldUp);
+        if (persEnabled == true && othroEnabled == false)
+        {
+            persCam.AssignPersCam(persCam.GetPersMatrix(), object.getShaderProgram());
+        }
+        else if (othroEnabled == true && persEnabled == false)
+        {
+            othroCam.AssignOrthoCam(othroCam.GetOrthoMatrix(), object.getShaderProgram());
+        }
 
         //object.SetColor(glm::vec3(0.4f, 0.f, 0.f));
-        object.DrawModel(transform_matrix, projection, viewMatrix, cameraPos);
+        object.DrawModel(transform_matrix);
+        camera.AssignCameraPos(object.getShaderProgram());
+        object.DrawFunction();
         thetaX += 0.001f;
 
         /* Swap front and back buffers */
